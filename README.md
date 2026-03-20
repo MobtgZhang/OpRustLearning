@@ -16,6 +16,12 @@
 - **自定义测试框架** — 支持通过串口输出测试结果，在 QEMU 中自动化测试
 - **交互式键盘回显** — 启动后可直接在屏幕上看到键盘输入
 
+## 运行效果
+
+在 QEMU 中启动内核后，帧缓冲区会显示 **绿色等宽字 + 黑底** 的终端风格界面：ASCII 艺术横幅、版本信息（当前为 **v0.1.0**）、子系统初始化状态（GDT/IDT/PIC、页表与帧分配器、堆），以及 `Box<i32>` 与 `Vec` 的堆分配演示；随后提示键盘输入将回显到屏幕，可用 **Ctrl+C** 或关闭 QEMU 窗口退出。
+
+![LumenOS 在 QEMU 中的运行效果](asserts/screenshot.png)
+
 ## 功能概览
 
 | 模块 | 文件 | 功能描述 |
@@ -78,6 +84,8 @@ make help      # 查看所有可用命令
 LumenOS/
 ├── .cargo/
 │   └── config.toml          # Cargo 构建配置（目标平台、QEMU runner）
+├── asserts/
+│   └── screenshot.png       # QEMU 运行截图（README 展示用）
 ├── builder/                  # 磁盘镜像构建工具（宿主机程序）
 │   ├── Cargo.toml
 │   ├── rust-toolchain.toml
