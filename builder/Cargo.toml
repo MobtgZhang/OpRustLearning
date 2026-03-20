@@ -1,0 +1,8 @@
+[package]
+name = "lumenos-builder"
+version = "0.1.0"
+edition = "2021"
+description = "LumenOS 磁盘镜像构建工具 & QEMU 运行器"
+
+[dependencies]
+bootloader = "0.11"

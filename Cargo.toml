@@ -1,20 +1,46 @@
 [package]
-name = "blog_os"
+name = "lumenos"
 version = "0.1.0"
 edition = "2021"
 authors = ["OpRustLearning"]
 license = "MIT OR Apache-2.0"
-description = "最小 x86_64 内核，对齐 phil-opp / Writing an OS in Rust（VGA 文本模式）"
+description = "LumenOS — 一个参考 blog_os 设计的 x86_64 学习型微内核操作系统，支持 BIOS 和 UEFI 双启动"
+
+# ============================================================================
+# 依赖说明：
+# - bootloader_api: bootloader v0.11 的 API 接口层，提供 BootInfo/entry_point 等
+# - spin: 提供自旋锁，在无操作系统环境中替代 std::sync::Mutex
+# - lazy_static: 允许在运行时初始化静态变量（需要 spin_no_std 特性）
+# - x86_64: 提供 x86_64 架构特有的数据结构（页表、IDT、GDT 等）
+# - uart_16550: UART 串口驱动，用于向宿主机输出调试信息
+# - pic8259: 8259 可编程中断控制器驱动，管理硬件中断
+# - pc-keyboard: PS/2 键盘扫描码解码器
+# - linked_list_allocator: 基于链表的堆内存分配器
+# - noto-sans-mono-bitmap: 无 std 位图字体，用于帧缓冲区文本渲染
+# ============================================================================
 
 [dependencies]
-bootloader = { version = "0.9.34", features = ["map_physical_memory"] }
-lazy_static = { version = "1.5", features = ["spin_no_std"] }
-spin = "0.9.8"
-[package.metadata.bootimage]
-# bootimage 将本 crate 的内核 ELF 与 bootloader 拼接为可引导磁盘镜像
+bootloader_api = "0.11"
+spin = "0.9"
+x86_64 = "0.14"
+uart_16550 = "0.2"
+pic8259 = "0.10"
+pc-keyboard = "0.7"
+linked_list_allocator = "0.9"
+noto-sans-mono-bitmap = "0.2"
 
+[dependencies.lazy_static]
+version = "1.0"
+features = ["spin_no_std"]
+
+# 内核不使用标准库的栈展开（unwind），异常时直接 abort
 [profile.dev]
 panic = "abort"
 
 [profile.release]
 panic = "abort"
+
+# stack_overflow 测试不使用标准测试框架，因为它自行管理执行流程
+[[test]]
+name = "stack_overflow"
+harness = false

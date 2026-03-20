@@ -1,0 +1,2 @@
+# 覆盖根目录的 .cargo/config.toml，builder 是宿主机程序
+# 不需要 bare-metal target
